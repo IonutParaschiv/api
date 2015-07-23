@@ -8,8 +8,8 @@ class Db{
  * @return [type] [description]
  */
     private function conn(){
-        $dbun = "root";
-        $dbpw = "";
+        $dbun = "apiRoot";
+        $dbpw = "jaxierulestheblock";
         $host = "localhost";
         $db = self::DATABASE_NAME;
 
