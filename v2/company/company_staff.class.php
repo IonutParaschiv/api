@@ -24,7 +24,6 @@ class company_staff{
     public function get($companyid, $staffid){
         $response = Db::getStaff($companyid, $staffid);
 
-
         return json_encode($response);
     }
 
@@ -37,6 +36,7 @@ class company_staff{
     }
 
     public function getAll($userId, $companyid){
+
         $response = Db::getCompanyStaff($companyid);
 
         return json_encode($response);

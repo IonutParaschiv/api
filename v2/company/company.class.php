@@ -15,6 +15,8 @@ class company{
     public function route($method='', $paths = array(), $params, $userid){
 
         $identifier = !empty($paths['0']) ? $paths['0'] : '';
+        $identifier_subclass = !empty($paths['2']) ? $paths['2'] : '';
+
         //format the response
         $response = '';
         //the default class will be company
@@ -37,13 +39,16 @@ class company{
         }
         switch ($method) {
             case 'GET':
-                if((empty($identifier) || !is_numeric($identifier)) ||
-                    (empty($identifier_subclass) || !is_numeric($identifier_subclass))
-                    ){
+                if((empty($identifier) || !is_numeric($identifier))){
                     $response = $class::getAll($userid, $identifier);
                 }else{
-
-                    $response = $class::get($identifier, $identifier_subclass);
+                    if( (empty($identifier_subclass) || !is_numeric($identifier_subclass)) && $class != 'company'){
+                        
+                        $response = $class::getAll($userid, $identifier);
+                    }else{
+                        $response = $class::get($identifier, $identifier_subclass); 
+                    }
+                    
                 }
                 break;
             case 'POST':
@@ -97,7 +102,6 @@ class company{
     }
 
     public function get($identifier){
-
         $response = Db::getCompany($identifier);
 
         return json_encode($response);
