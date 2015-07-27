@@ -534,11 +534,12 @@ public function editService($serviceId, $companyId, $params){
         $conn = self::conn();
         
          #if no services are supplied, the field is null
-        if(isset($params->services)){
+       if(empty($params->services)){
+            $services = NULL;
+        }else{
             $services = self::getServicesById($params->services);
             $params->services = json_encode($services);
         }
-        // var_dump($params);die();
         $fields = array();
         foreach ($params as $key => $value) {
             $set = $key." = '".$value."'";
