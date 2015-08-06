@@ -625,16 +625,32 @@ public function editService($serviceId, $companyId, $params){
     }
 
     public function createBooking($params){
+
+        $service = self::getSingleService($params->service_id);
+
+        $duration = $service['duration'];
+
+        $startTime = strtotime($params->start);
+
+        $endTime = $startTime + $duration;
+
+        $endTime = date('Y-m-d H:i:s', $endTime);
+
         $conn = self::conn();
-        $query = "INSERT INTO ". self::DATABASE_NAME .".booking ( id, company_id, staff_id, service_id, start, end)
-                    VALUES ('', :company_id, :staff_id, :service_id, :start, :end)";
+        $query = "INSERT INTO " .self::DATABASE_NAME. ".booking (company_id, staff_id, service_id, start, end, cust_name, cust_surname, cust_email, cust_phone) 
+                                                        VALUES (:companyid, :staffid, :serviceid, :startdate, :enddate, :custname, :custsurname, :custemail, :custphone)";
+        
         $stmt = $conn->prepare($query);
 
-        $stmt->bindParam(':company_id', $params['company_id']);
-        $stmt->bindParam(':staff_id', $params['staff_id']);
-        $stmt->bindParam(':service_id', $params['service_id']);
-        $stmt->bindParam(':start', $params['start']);
-        $stmt->bindParam(':end', $params['end']);
+        $stmt->bindParam(':companyid', $params->company_id);
+        $stmt->bindParam(':staffid', $params->staff_id);
+        $stmt->bindParam(':serviceid', $params->service_id);
+        $stmt->bindParam(':startdate', $params->start);
+        $stmt->bindParam(':enddate', $endTime);
+        $stmt->bindParam(':custname', $params->name);
+        $stmt->bindParam(':custsurname', $params->surname);
+        $stmt->bindParam(':custemail', $params->email);
+        $stmt->bindParam(':custphone', $params->phone);
 
         $result = $stmt->execute();
 
