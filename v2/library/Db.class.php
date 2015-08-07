@@ -662,7 +662,7 @@ public function editService($serviceId, $companyId, $params){
     }
 
 
-    public function getAllServices($userid, $companyId){
+    public function getAllBookings($userid, $companyId){
         // var_dump("here i am");die();
 
         $conn = self::conn();
@@ -676,7 +676,33 @@ public function editService($serviceId, $companyId, $params){
         $result = $stmt->execute();
 
         if($result){
-            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // $serviceId = getSingleService()
+            $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            for($i = 0; $i< count($bookings); $i++){
+                $staff = self::getSingleStaff($bookings[$i]['staff_id']);
+                $service = self::getSingleService($bookings[$i]['staff_id']);
+
+                $serviceObj = new stdClass();
+                $serviceObj->name = $service['name'];
+                $serviceObj->description = $service['description'];
+                $serviceObj->price = $service['price'];
+
+                $staffObj = new stdClass();
+                $staffObj->id = $staff[0]['id'];
+                $staffObj->name = $staff[0]['name'];
+                $staffObj->surname = $staff[0]['surname'];
+                $staffObj->email = $staff[0]['email'];
+
+
+                $bookings[$i]['staffDetails'] = $staffObj;
+                $bookings[$i]['serviceDetails'] = $serviceObj;
+
+
+            }
+
+            return $bookings;
         }else{
             $response = false;
         }

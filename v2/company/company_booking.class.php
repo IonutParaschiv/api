@@ -8,7 +8,7 @@ class company_booking{
 	}
 
 	public function getAll($userId, $companyid){
-		$response  = Db::getAllServices($userId, $companyid);
+		$response  = Db::getAllBookings($userId, $companyid);
 
 		return json_encode($response);
 	}
