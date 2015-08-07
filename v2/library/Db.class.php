@@ -661,6 +661,29 @@ public function editService($serviceId, $companyId, $params){
         }
     }
 
+
+    public function getAllServices($userid, $companyId){
+        // var_dump("here i am");die();
+
+        $conn = self::conn();
+
+        $query = "SELECT * FROM ".self::DATABASE_NAME.".booking WHERE company_id = :companyid";
+
+        $stmt = $conn->prepare($query);
+
+        $stmt->bindParam('companyid', $companyId);
+
+        $result = $stmt->execute();
+
+        if($result){
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }else{
+            $response = false;
+        }
+
+        return $response;
+    }
+
 /**
  * gets the latest entry from the specified table
  * @param  [string] $table subject of the query
